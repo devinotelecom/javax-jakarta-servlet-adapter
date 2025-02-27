@@ -5,10 +5,7 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ServletContextAdapter implements ServletContext {
 
@@ -30,286 +27,310 @@ public class ServletContextAdapter implements ServletContext {
 
 	@Override
 	public int getMajorVersion() {
-		return 0;
+		return jakartaContext.getMajorVersion();
 	}
 
 	@Override
 	public int getMinorVersion() {
-		return 0;
+		return jakartaContext.getMinorVersion();
 	}
 
 	@Override
 	public int getEffectiveMajorVersion() {
-		return 0;
+		return jakartaContext.getEffectiveMajorVersion();
 	}
 
 	@Override
 	public int getEffectiveMinorVersion() {
-		return 0;
+		return jakartaContext.getEffectiveMinorVersion();
 	}
 
 	@Override
 	public String getMimeType(String file) {
-		return "";
+		return jakartaContext.getMimeType(file);
 	}
 
 	@Override
 	public Set<String> getResourcePaths(String path) {
-		return Set.of();
+		return jakartaContext.getResourcePaths(path);
 	}
 
 	@Override
 	public URL getResource(String path) throws MalformedURLException {
-		return null;
+		return jakartaContext.getResource(path);
 	}
 
 	@Override
 	public InputStream getResourceAsStream(String path) {
-		return null;
+		return jakartaContext.getResourceAsStream(path);
 	}
 
 	@Override
 	public RequestDispatcher getRequestDispatcher(String path) {
-		return null;
+		return new RequestDispatcherAdapter(jakartaContext.getRequestDispatcher(path));
 	}
 
 	@Override
 	public RequestDispatcher getNamedDispatcher(String name) {
-		return null;
+		return new RequestDispatcherAdapter(jakartaContext.getNamedDispatcher(name));
 	}
 
 	@Override
 	public Servlet getServlet(String name) throws ServletException {
-		return null;
+		return null;//нет такого метода
 	}
 
 	@Override
 	public Enumeration<Servlet> getServlets() {
-		return null;
+		return null;//нет такого метода
 	}
 
 	@Override
 	public Enumeration<String> getServletNames() {
-		return null;
+		return null;//нет такого метода
 	}
 
 	@Override
 	public void log(String msg) {
-
+		jakartaContext.log(msg);
 	}
 
 	@Override
 	public void log(Exception exception, String msg) {
-
+		jakartaContext.log(msg, exception);
 	}
 
 	@Override
 	public void log(String message, Throwable throwable) {
-
+		jakartaContext.log(message, throwable);
 	}
 
 	@Override
 	public String getRealPath(String path) {
-		return "";
+		return jakartaContext.getRealPath(path);
 	}
 
 	@Override
 	public String getServerInfo() {
-		return "";
+		return jakartaContext.getServerInfo();
 	}
 
 	@Override
 	public String getInitParameter(String name) {
-		return "";
+		return jakartaContext.getInitParameter(name);
 	}
 
 	@Override
 	public Enumeration<String> getInitParameterNames() {
-		return null;
+		return jakartaContext.getInitParameterNames();
 	}
 
 	@Override
 	public boolean setInitParameter(String name, String value) {
-		return false;
+		return jakartaContext.setInitParameter(name, value);
 	}
 
 	@Override
 	public Object getAttribute(String name) {
-		return null;
+		return jakartaContext.getAttribute(name);
 	}
 
 	@Override
 	public Enumeration<String> getAttributeNames() {
-		return null;
+		return jakartaContext.getAttributeNames();
 	}
 
 	@Override
 	public void setAttribute(String name, Object object) {
-
+		jakartaContext.setAttribute(name, object);
 	}
 
 	@Override
 	public void removeAttribute(String name) {
-
+		jakartaContext.removeAttribute(name);
 	}
 
 	@Override
 	public String getServletContextName() {
-		return "";
+		return jakartaContext.getServletContextName();
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, String className) {
-		return null;
+		return new ServletRegistrationDynamicAdapter(jakartaContext.addServlet(servletName, className));
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet) {
-		return null;
+		return null;//ServletRegistrationDynamicAdapter(jakartaContext.addServlet(servletName, servlet));
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass) {
-		return null;
+		return null;//ServletRegistrationDynamicAdapter(jakartaContext.addServlet(servletName, servletClass));
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addJspFile(String servletName, String jspFile) {
-		return null;
+		return new ServletRegistrationDynamicAdapter(jakartaContext.addJspFile(servletName, jspFile));
 	}
 
 	@Override
 	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
-		return null;
+		return null;//new ServletAdapter(jakartaContext.createServlet(clazz));
 	}
 
 	@Override
 	public ServletRegistration getServletRegistration(String servletName) {
-		return null;
+		return new ServletRegistrationAdapter(jakartaContext.getServletRegistration(servletName));
 	}
 
 	@Override
 	public Map<String, ? extends ServletRegistration> getServletRegistrations() {
-		return Map.of();
+		Map<String, ? extends jakarta.servlet.ServletRegistration> jakartaRegistrations = jakartaContext.getServletRegistrations();
+		Map<String, ServletRegistration> javaxRegistrations = new HashMap<>();
+
+		for (Map.Entry<String, ? extends jakarta.servlet.ServletRegistration> entry : jakartaRegistrations.entrySet()) {
+			String key = entry.getKey();
+			jakarta.servlet.ServletRegistration jakartaRegistration = entry.getValue();
+			ServletRegistration javaxRegistration = new ServletRegistrationAdapter(jakartaRegistration);
+			javaxRegistrations.put(key, javaxRegistration);
+		}
+
+		return javaxRegistrations;
 	}
 
 	@Override
 	public FilterRegistration.Dynamic addFilter(String filterName, String className) {
-		return null;
+		return new FilterRegistrationDynamicAdapter(jakartaContext.addFilter(filterName, className));
 	}
 
 	@Override
 	public FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
-		return null;
+		return null;//jakartaContext.addFilter(filterName, filter);
 	}
 
 	@Override
 	public FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass) {
-		return null;
+		return null;//jakartaContext.addFilter(filterName, filterClass);
 	}
 
 	@Override
 	public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException {
-		return null;
+		return null;// jakartaContext.createFilter(clazz);
 	}
 
 	@Override
 	public FilterRegistration getFilterRegistration(String filterName) {
-		return null;
+		return new FilterRegistrationAdapter(jakartaContext.getFilterRegistration(filterName));
 	}
 
 	@Override
 	public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
-		return Map.of();
+		Map<String, ? extends jakarta.servlet.FilterRegistration> jakartaRegistrations = jakartaContext.getFilterRegistrations();
+		Map<String, FilterRegistration> javaxRegistrations = new HashMap<>();
+
+		for (Map.Entry<String, ? extends jakarta.servlet.FilterRegistration> entry : jakartaRegistrations.entrySet()) {
+			String key = entry.getKey();
+			jakarta.servlet.FilterRegistration jakartaRegistration = entry.getValue();
+			FilterRegistration javaxRegistration = new FilterRegistrationAdapter(jakartaRegistration);
+			javaxRegistrations.put(key, javaxRegistration);
+		}
+
+		return javaxRegistrations;
 	}
 
 	@Override
 	public SessionCookieConfig getSessionCookieConfig() {
-		return null;
+		return new SessionCookieConfigAdapter(jakartaContext.getSessionCookieConfig());
 	}
 
 	@Override
 	public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
-
+		//jakartaContext.setSessionTrackingModes(sessionTrackingModes);
 	}
 
 	@Override
 	public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
-		return Set.of();
+		return null;//jakartaContext.getDefaultSessionTrackingModes();
 	}
 
 	@Override
 	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
-		return Set.of();
+		return null;// jakartaContext.getEffectiveSessionTrackingModes();
 	}
 
 	@Override
 	public void addListener(String className) {
-
+		jakartaContext.addListener(className);
 	}
 
 	@Override
 	public <T extends EventListener> void addListener(T t) {
-
+		jakartaContext.addListener(t);
 	}
 
 	@Override
 	public void addListener(Class<? extends EventListener> listenerClass) {
-
+		jakartaContext.addListener(listenerClass);
 	}
 
 	@Override
 	public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException {
-		return null;
+		try {
+			return jakartaContext.createListener(clazz);
+		} catch (jakarta.servlet.ServletException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public JspConfigDescriptor getJspConfigDescriptor() {
-		return null;
+		return new JspConfigDescriptorAdapter(jakartaContext.getJspConfigDescriptor());
 	}
 
 	@Override
 	public ClassLoader getClassLoader() {
-		return null;
+		return jakartaContext.getClassLoader();
 	}
 
 	@Override
 	public void declareRoles(String... roleNames) {
-
+		jakartaContext.declareRoles(roleNames);
 	}
 
 	@Override
 	public String getVirtualServerName() {
-		return "";
+		return jakartaContext.getVirtualServerName();
 	}
 
 	@Override
 	public int getSessionTimeout() {
-		return 0;
+		return jakartaContext.getSessionTimeout();
 	}
 
 	@Override
 	public void setSessionTimeout(int sessionTimeout) {
-
+		jakartaContext.getSessionTimeout();
 	}
 
 	@Override
 	public String getRequestCharacterEncoding() {
-		return "";
+		return jakartaContext.getRequestCharacterEncoding();
 	}
 
 	@Override
 	public void setRequestCharacterEncoding(String encoding) {
-
+		jakartaContext.setRequestCharacterEncoding(encoding);
 	}
 
 	@Override
 	public String getResponseCharacterEncoding() {
-		return "";
+		return jakartaContext.getRequestCharacterEncoding();
 	}
 
 	@Override
 	public void setResponseCharacterEncoding(String encoding) {
-
+		jakartaContext.setRequestCharacterEncoding(encoding);
 	}
 }

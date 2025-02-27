@@ -157,7 +157,7 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public boolean authenticate(javax.servlet.http.HttpServletResponse response) throws IOException, javax.servlet.ServletException {
-		jakarta.servlet.http.HttpServletResponse jakartaResponse = new JavaxToJakartaResponseAdapter(response);
+		jakarta.servlet.http.HttpServletResponse jakartaResponse = new JavaxToJakartaResponseWrapperAdapter(response);
 		try {
 			return jakartaRequest.authenticate(jakartaResponse);
 		} catch (jakarta.servlet.ServletException e) {
@@ -336,7 +336,7 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public javax.servlet.RequestDispatcher getRequestDispatcher(String path) {
-		return null;// jakartaRequest.getRequestDispatcher(path);
+		return new RequestDispatcherAdapter(jakartaRequest.getRequestDispatcher(path));
 	}
 
 	@Override
