@@ -1,5 +1,8 @@
 package com.devinotele.servletbridge;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import javax.servlet.*;
 import javax.servlet.descriptor.JspConfigDescriptor;
 import java.io.InputStream;
@@ -7,13 +10,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+@RequiredArgsConstructor
 public class ServletContextAdapter implements ServletContext {
-
-	private final jakarta.servlet.ServletContext jakartaContext;
-
-	public ServletContextAdapter(jakarta.servlet.ServletContext jakartaContext) {
-		this.jakartaContext = jakartaContext;
-	}
+	@Getter private final jakarta.servlet.ServletContext jakartaContext;
 
 	@Override
 	public String getContextPath() {
