@@ -9,10 +9,16 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public class ServletContextAdapter implements ServletContext {
+public class ServletContextAdapter implements ServletContext, Supplier<jakarta.servlet.ServletContext> {
 	@Getter private final jakarta.servlet.ServletContext jakartaContext;
+
+	@Override
+	public jakarta.servlet.ServletContext get() {
+		return jakartaContext;
+	}
 
 	@Override
 	public String getContextPath() {

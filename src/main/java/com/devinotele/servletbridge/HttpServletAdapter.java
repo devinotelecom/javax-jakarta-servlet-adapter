@@ -1,5 +1,6 @@
 package com.devinotele.servletbridge;
 
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,4 +25,17 @@ public class HttpServletAdapter extends HttpServlet {
 			throw new ServletException(e);
 		}
 	}
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config); // Вызов init у родительского класса (HttpServlet)
+		try {
+			javax.servlet.ServletConfig javaxConfig = new ServletConfigAdapter(config);
+			legacyServlet.init(javaxConfig);
+
+		} catch (javax.servlet.ServletException e) {
+			throw new ServletException(e);
+		}
+	}
+
 }
