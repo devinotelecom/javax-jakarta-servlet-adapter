@@ -1,18 +1,16 @@
 package com.devinotele.servletbridge;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import javax.servlet.ServletRegistration;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ServletRegistrationAdapter implements ServletRegistration {
-
-	private final jakarta.servlet.ServletRegistration servletRegistration;
-
-	public ServletRegistrationAdapter(jakarta.servlet.ServletRegistration servletRegistration) {
-		this.servletRegistration = servletRegistration;
-	}
+@RequiredArgsConstructor
+public class ServletRegistrationAdapter implements ServletRegistration, jakarta.servlet.ServletRegistration {
+	@Getter private final jakarta.servlet.ServletRegistration servletRegistration;
 
 	@Override
 	public Set<String> addMapping(String... urlPatterns) {
