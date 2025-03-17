@@ -1,17 +1,16 @@
 package com.devinotele.servletbridge;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Locale;
 
+@RequiredArgsConstructor
 public class JakartaToJavaxResponseAdapter implements HttpServletResponse {
-
-	private final jakarta.servlet.http.HttpServletResponse jakartaResponse;
-
-	public JakartaToJavaxResponseAdapter(jakarta.servlet.http.HttpServletResponse jakartaResponse) {
-		this.jakartaResponse = jakartaResponse;
-	}
+	@Getter private final jakarta.servlet.http.HttpServletResponse jakartaResponse;
 
 	@Override
 	public void addCookie(javax.servlet.http.Cookie cookie) {
@@ -196,5 +195,10 @@ public class JakartaToJavaxResponseAdapter implements HttpServletResponse {
 	@Override
 	public Locale getLocale() {
 		return jakartaResponse.getLocale();
+	}
+
+	@Override
+	public String toString () {
+		return jakartaResponse.toString();
 	}
 }
