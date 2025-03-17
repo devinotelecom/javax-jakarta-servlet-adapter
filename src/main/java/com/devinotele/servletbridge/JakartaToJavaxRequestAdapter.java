@@ -348,7 +348,7 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public String getRealPath(String path) {
-		return null;//jakartaRequest.getRealPath(path);
+		return jakartaRequest.getServletContext().getRealPath(path);
 	}
 
 	@Override
