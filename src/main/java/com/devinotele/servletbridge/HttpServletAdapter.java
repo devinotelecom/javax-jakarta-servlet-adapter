@@ -57,7 +57,7 @@ public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet {
 	protected long getLastModified (HttpServletRequest req) {
 		//return legacyServlet.getLastModified(new JakartaToJavaxRequestAdapter(req));
 		try {
-			return (Long) GET_LAST_MODIFIED.invoke(new JakartaToJavaxRequestAdapter(req));
+			return (Long) GET_LAST_MODIFIED.invoke(legacyServlet, new JakartaToJavaxRequestAdapter(req));
 		} catch (Throwable e){
 			return super.getLastModified(req);
 		}

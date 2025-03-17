@@ -54,8 +54,11 @@ java {
 dependencies {
   errorprone("com.google.errorprone:error_prone_core:latest.release")
 	api("org.jspecify:jspecify:latest.release!!")
-	compileOnly 'javax.servlet:javax.servlet-api:4.+'
+	api 'javax.servlet:javax.servlet-api:4.+'
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.+'
+
+	testImplementation("org.junit.jupiter:junit-jupiter:5.11.+!!")
+	testImplementation('jakarta.servlet:jakarta.servlet-api:6.+')
 }
 configurations.configureEach {
 	// use slf4j + logback
