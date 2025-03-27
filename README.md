@@ -13,5 +13,5 @@ public ServletRegistrationBean<HttpServletAdapter> wrappedLegacyServlet() {
 	val registrationBean = new ServletRegistrationBean<>(adapter,	"servlet_path");
 	registrationBean.setName("beanName");
 	return registrationBean;
-	}
+}
 ```
