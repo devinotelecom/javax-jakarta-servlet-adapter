@@ -6,8 +6,8 @@ Allows to run legacy spring boot 2.+ code on spring boot 3.+. As a result, makes
 ```java
 @Bean
 public ServletRegistrationBean<HttpServletAdapter> wrappedLegacyServlet() {
-	//Legacy javax servlet which extends javax.servlet.http.HttpServlet
-	val legacyApplicationServlet = new ApplicationServlet();
+	//Any legacy javax servlet which extends javax.servlet.http.HttpServlet
+	val legacyServlet = new LegacyServlet();
 	// wrapping legacy servlet into adapter
 	HttpServletAdapter adapter = new HttpServletAdapter(applicationServlet);
 	val registrationBean = new ServletRegistrationBean<>(adapter,	"servlet_path");
