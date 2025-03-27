@@ -2,13 +2,10 @@ plugins {
   id "java-library"
   id "idea"
   id "maven-publish"
-
   // which produces test fixtures [in src/testFixtures/java] can use main and visible for test:  id 'java-test-fixtures'
 
-  alias(libs.plugins.lombok)
-  alias(libs.plugins.errorprone)
-  //alias(libs.plugins.sonarLint)
-  //alias(libs.plugins.tomcat)
+  id("io.freefair.lombok") version "latest.release"
+  id("net.ltgt.errorprone") version "latest.release"
 }
 
 repositories {
@@ -49,30 +46,27 @@ publishing {// https://docs.gradle.org/current/userguide/publishing_maven.html
     }
   }
 }
-java {// создать ...-src.jar и ...-javadoc.jar × ломалась наша публикация в corp. maven (скрипт админов не ожидал > 1 файла)
+java {
   withSourcesJar()
-  //×withJavadocJar() → javadoc == nazi :-(  А у нас этих док всё равно почти нет
+  //×withJavadocJar()
 }
 
 dependencies {
   errorprone("com.google.errorprone:error_prone_core:latest.release")
+	api("org.jspecify:jspecify:latest.release!!")
+	api 'javax.servlet:javax.servlet-api:4.+'
+	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.+'
 
-	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-	compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
+	testImplementation("org.junit.jupiter:junit-jupiter:5.11.+!!")
+	testImplementation('jakarta.servlet:jakarta.servlet-api:6.+')
 }
 configurations.configureEach {
-	// используем slf4j + logback ⇒ вырезаем конкурентов
+	// use slf4j + logback
 	exclude group: "commons-logging", module: "commons-logging"
 	exclude group: 'org.springframework', module: 'spring-jcl'
-	exclude group: "org.apache.logging.log4j", module: "log4j-api" // vertx,spring-boot-starter-logging тянут
+	exclude group: "org.apache.logging.log4j", module: "log4j-api"
 	exclude group: "org.apache.logging.log4j", module: "log4j-to-slf4j"
 	exclude group: "org.jboss.slf4j", module: "slf4j-jboss-logmanager"
-
-	exclude group: "com.mchange", module: "c3p0"
-	exclude group: 'io.ebean', module: 'ebean-datasource'
-	exclude group: 'io.ebean', module: 'ebean-joda-time'
-
-	exclude group: 'com.microsoft.sqlserver', module: 'mssql-jdbc'
 }
 
 idea { module { downloadJavadoc = true; downloadSources = true } }
@@ -87,49 +81,18 @@ test {
   }
   enableAssertions = true
   maxHeapSize = "1G"
-  jvmArgs += [
-      '-XX:+UseParallelGC',
-      '-XX:+HeapDumpOnOutOfMemoryError',
-      '-XX:+UseCompressedOops',
-      '-XX:-OmitStackTraceInFastThrow',
-      '-Djava.net.preferIPv4Stack=true',
-      "-XX:HeapDumpPath=/temp/java_${project.name}.hprof",
-      '-XX:+DoEscapeAnalysis',
-      '-XX:CompileCommand=inline,java/lang/String.charAt',
-      '--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED',
-      '--add-opens=java.base/sun.nio.ch=ALL-UNNAMED',
-      '--add-opens=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED',
-      '--add-opens=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED',
-      '--add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED',
-      '--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED',
-      '--add-opens=java.base/java.io=ALL-UNNAMED',
-      '--add-opens=java.base/java.nio=ALL-UNNAMED',
-      '--add-opens=java.base/java.util=ALL-UNNAMED',
-      '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
-      '--add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED',
-      '--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED',
-      '--add-opens=java.base/java.lang=ALL-UNNAMED',
-      '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED',
-      '--add-opens=java.base/java.math=ALL-UNNAMED',
-      '--add-opens=java.sql/java.sql=ALL-UNNAMED',
-      '--add-opens=java.base/java.net=ALL-UNNAMED'
-  ]
-
-  //systemProperty("slf4j.detectLoggerNameMismatch", "true")
+  systemProperty("slf4j.detectLoggerNameMismatch", "true")
   systemProperty("file.encoding", "UTF-8")
   systemProperty("java.net.preferIPv4Stack", "true")
 
-  systemProperty("user.timezone", "Europe/Moscow") // есть тесты с жестко прописанной TZ
-  systemProperty("user.language", "ru") // en не подходит т.к. работаем с форматом даты-времени/чисел
-  Locale.setDefault(new Locale("ru", "RU")) // en US
+  systemProperty("user.timezone", "Europe/Moscow")
+  systemProperty("user.language", "en")
 
-  // в multi-project нас чаще запускают в корне, но могут в our subproject dir: где искать конфиги?!
-  workingDir project.projectDir // Set the working directory to the subproject directory e.g. fink-lab/common-utils
-  systemProperty("user.dir", project.projectDir) // контрольный выстрел
+  workingDir project.projectDir // Set the working directory to the subproject directory
+  systemProperty("user.dir", project.projectDir)
   println "[INFO] ${project.name}.workingDir == $workingDir"
 }
 lombok { version = "latest.release" }
-//sonarLint { ignoreFailures = true }
 
 tasks.withType(AbstractArchiveTask).configureEach {
   preserveFileTimestamps = false

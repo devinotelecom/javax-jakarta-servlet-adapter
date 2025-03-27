@@ -1,20 +1,27 @@
 package com.devinotele.servletbridge;
 
-import javax.servlet.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
 
+@RequiredArgsConstructor
 public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
-
-	private final jakarta.servlet.http.HttpServletRequest jakartaRequest;
-
-	public JakartaToJavaxRequestAdapter(jakarta.servlet.http.HttpServletRequest jakartaRequest) {
-		this.jakartaRequest = jakartaRequest;
-	}
+	@Getter private final jakarta.servlet.http.HttpServletRequest jakartaRequest;
 
 	@Override
 	public String getAuthType() {
@@ -24,11 +31,11 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 	@Override
 	public javax.servlet.http.Cookie[] getCookies() {
 		jakarta.servlet.http.Cookie[] jakartaCookies = jakartaRequest.getCookies();
-		if (jakartaCookies == null) {
+		if (jakartaCookies == null){
 			return null;
 		}
 		javax.servlet.http.Cookie[] javaxCookies = new javax.servlet.http.Cookie[jakartaCookies.length];
-		for (int i = 0; i < jakartaCookies.length; i++) {
+		for (int i = 0; i < jakartaCookies.length; i++){
 			jakarta.servlet.http.Cookie jakartaCookie = jakartaCookies[i];
 			javaxCookies[i] = new javax.servlet.http.Cookie(jakartaCookie.getName(), jakartaCookie.getValue());
 		}
@@ -160,8 +167,8 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 		jakarta.servlet.http.HttpServletResponse jakartaResponse = new JavaxToJakartaResponseWrapperAdapter(response);
 		try {
 			return jakartaRequest.authenticate(jakartaResponse);
-		} catch (jakarta.servlet.ServletException e) {
-			throw new RuntimeException(e);
+		} catch (jakarta.servlet.ServletException e){
+			throw new javax.servlet.ServletException(e);
 		}
 	}
 
@@ -169,8 +176,8 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 	public void login(String username, String password) throws javax.servlet.ServletException {
 		try {
 			jakartaRequest.login(username, password);
-		} catch (jakarta.servlet.ServletException e) {
-			throw new RuntimeException(e);
+		} catch (jakarta.servlet.ServletException e){
+			throw new javax.servlet.ServletException(e);
 		}
 	}
 
@@ -178,21 +185,21 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 	public void logout() throws javax.servlet.ServletException {
 		try {
 			jakartaRequest.logout();
-		} catch (jakarta.servlet.ServletException e) {
-			throw new RuntimeException(e);
+		} catch (jakarta.servlet.ServletException e){
+			throw new javax.servlet.ServletException(e);
 		}
 	}
 
 	@Override
 	public Collection<javax.servlet.http.Part> getParts() throws IOException, javax.servlet.ServletException {
-		Collection<jakarta.servlet.http.Part> jakartaParts = null;
+		Collection<jakarta.servlet.http.Part> jakartaParts;
 		try {
 			jakartaParts = jakartaRequest.getParts();
-		} catch (jakarta.servlet.ServletException e) {
-			throw new RuntimeException(e);
+		} catch (jakarta.servlet.ServletException e){
+			throw new javax.servlet.ServletException(e);
 		}
 		Collection<javax.servlet.http.Part> javaxParts = new ArrayList<>();
-		for (jakarta.servlet.http.Part jakartaPart : jakartaParts) {
+		for (jakarta.servlet.http.Part jakartaPart : jakartaParts){
 			javaxParts.add(new PartAdapter(jakartaPart));
 		}
 		return javaxParts;
@@ -200,11 +207,11 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public javax.servlet.http.Part getPart(String name) throws IOException, javax.servlet.ServletException {
-		jakarta.servlet.http.Part jakartaPart = null;
+		jakarta.servlet.http.Part jakartaPart;
 		try {
 			jakartaPart = jakartaRequest.getPart(name);
-		} catch (jakarta.servlet.ServletException e) {
-			throw new RuntimeException(e);
+		} catch (jakarta.servlet.ServletException e){
+			throw new javax.servlet.ServletException(e);
 		}
 		return new PartAdapter(jakartaPart);
 	}
@@ -341,7 +348,7 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public String getRealPath(String path) {
-		return null;//jakartaRequest.getRealPath(path);
+		return jakartaRequest.getServletContext().getRealPath(path);
 	}
 
 	@Override
