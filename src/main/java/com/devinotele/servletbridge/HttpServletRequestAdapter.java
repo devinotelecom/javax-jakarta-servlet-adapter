@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
+public class HttpServletRequestAdapter implements HttpServletRequest {
 	@Getter private final jakarta.servlet.http.HttpServletRequest jakartaRequest;
 
 	@Override
@@ -129,12 +129,12 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public javax.servlet.http.HttpSession getSession(boolean create) {
-		return new SessionAdapter(jakartaRequest.getSession(create));
+		return new HttpSessionAdapter(jakartaRequest.getSession(create));
 	}
 
 	@Override
 	public javax.servlet.http.HttpSession getSession() {
-		return new SessionAdapter(jakartaRequest.getSession());
+		return new HttpSessionAdapter(jakartaRequest.getSession());
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public boolean authenticate(javax.servlet.http.HttpServletResponse response) throws IOException, javax.servlet.ServletException {
-		jakarta.servlet.http.HttpServletResponse jakartaResponse = new JavaxToJakartaResponseWrapperAdapter(response);
+		jakarta.servlet.http.HttpServletResponse jakartaResponse = new HttpServletResponseWrapperAdapter(response);
 		try {
 			return jakartaRequest.authenticate(jakartaResponse);
 		} catch (jakarta.servlet.ServletException e){
@@ -258,7 +258,7 @@ public class JakartaToJavaxRequestAdapter implements HttpServletRequest {
 
 	@Override
 	public javax.servlet.ServletInputStream getInputStream() throws IOException {
-		return new InputStreamAdapter(jakartaRequest.getInputStream());
+		return new ServletInputStreamAdapter(jakartaRequest.getInputStream());
 	}
 
 	@Override

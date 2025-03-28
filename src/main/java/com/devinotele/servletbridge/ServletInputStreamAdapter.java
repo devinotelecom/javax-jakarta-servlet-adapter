@@ -3,11 +3,11 @@ package com.devinotele.servletbridge;
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
 
-public class InputStreamAdapter extends ServletInputStream {
+public class ServletInputStreamAdapter extends ServletInputStream {
 
 	private final jakarta.servlet.ServletInputStream jakartaInputStream;
 
-	public InputStreamAdapter(jakarta.servlet.ServletInputStream jakartaInputStream) {
+	public ServletInputStreamAdapter(jakarta.servlet.ServletInputStream jakartaInputStream) {
 		this.jakartaInputStream = jakartaInputStream;
 	}
 

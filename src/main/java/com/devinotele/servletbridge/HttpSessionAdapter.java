@@ -5,11 +5,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 
-public class SessionAdapter implements HttpSession {
+public class HttpSessionAdapter implements HttpSession {
 
 	private final jakarta.servlet.http.HttpSession jakartaSession;
 
-	public SessionAdapter(jakarta.servlet.http.HttpSession jakartaSession) {
+	public HttpSessionAdapter(jakarta.servlet.http.HttpSession jakartaSession) {
 		this.jakartaSession = jakartaSession;
 	}
 
