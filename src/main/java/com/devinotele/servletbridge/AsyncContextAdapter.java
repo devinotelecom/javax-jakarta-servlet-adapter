@@ -62,12 +62,12 @@ public class AsyncContextAdapter implements AsyncContext {
 
 	@Override
 	public ServletRequest getRequest() {
-		return new JakartaToJavaxRequestAdapter((jakarta.servlet.http.HttpServletRequest) jakartaAsyncContext.getRequest());
+		return new HttpServletRequestAdapter((jakarta.servlet.http.HttpServletRequest) jakartaAsyncContext.getRequest());
 	}
 
 	@Override
 	public ServletResponse getResponse() {
-		return new JakartaToJavaxResponseAdapter((jakarta.servlet.http.HttpServletResponse) jakartaAsyncContext.getResponse());
+		return new HttpServletResponseAdapter((jakarta.servlet.http.HttpServletResponse) jakartaAsyncContext.getResponse());
 	}
 
 	@Override

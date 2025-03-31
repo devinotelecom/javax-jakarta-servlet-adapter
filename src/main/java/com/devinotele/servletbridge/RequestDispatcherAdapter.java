@@ -18,8 +18,8 @@ public class RequestDispatcherAdapter implements RequestDispatcher, jakarta.serv
 	public void forward (ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		try {
 			jakartaDispatcher.forward(
-				((JakartaToJavaxRequestAdapter) request).getJakartaRequest(),
-				((JakartaToJavaxResponseAdapter) response).getJakartaResponse()
+				((HttpServletRequestAdapter) request).getJakartaRequest(),
+				((HttpServletResponseAdapter) response).getJakartaResponse()
 			);
 		} catch (jakarta.servlet.ServletException e){
 			throw new ServletException(e);
@@ -30,8 +30,8 @@ public class RequestDispatcherAdapter implements RequestDispatcher, jakarta.serv
 	public void include (ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		try {
 			jakartaDispatcher.include(
-				((JakartaToJavaxRequestAdapter) request).getJakartaRequest(),
-				((JakartaToJavaxResponseAdapter) response).getJakartaResponse()
+				((HttpServletRequestAdapter) request).getJakartaRequest(),
+				((HttpServletResponseAdapter) response).getJakartaResponse()
 			);
 		} catch (jakarta.servlet.ServletException e){
 			throw new ServletException(e);

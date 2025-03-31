@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 @RequiredArgsConstructor
-public class JakartaToJavaxResponseAdapter implements HttpServletResponse {
+public class HttpServletResponseAdapter implements HttpServletResponse {
 	@Getter private final jakarta.servlet.http.HttpServletResponse jakartaResponse;
 
 	@Override
@@ -129,7 +129,7 @@ public class JakartaToJavaxResponseAdapter implements HttpServletResponse {
 
 	@Override
 	public javax.servlet.ServletOutputStream getOutputStream() throws IOException {
-		return new OutputStreamAdapter(jakartaResponse.getOutputStream());
+		return new ServletOutputStreamAdapter(jakartaResponse.getOutputStream());
 	}
 
 	@Override

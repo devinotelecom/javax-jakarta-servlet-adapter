@@ -16,8 +16,8 @@ public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet {
 	@Override
 	protected void service (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			var javaxRequest = new JakartaToJavaxRequestAdapter(req);
-			var javaxResponse = new JakartaToJavaxResponseAdapter(resp);
+			var javaxRequest = new HttpServletRequestAdapter(req);
+			var javaxResponse = new HttpServletResponseAdapter(resp);
 			legacyServlet.service(javaxRequest, javaxResponse);
 		} catch (javax.servlet.ServletException e){
 			throw new jakarta.servlet.ServletException(e);
@@ -57,7 +57,7 @@ public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet {
 	protected long getLastModified (HttpServletRequest req) {
 		//return legacyServlet.getLastModified(new JakartaToJavaxRequestAdapter(req));
 		try {
-			return (Long) GET_LAST_MODIFIED.invoke(legacyServlet, new JakartaToJavaxRequestAdapter(req));
+			return (Long) GET_LAST_MODIFIED.invoke(legacyServlet, new HttpServletRequestAdapter(req));
 		} catch (Throwable e){
 			return super.getLastModified(req);
 		}

@@ -3,11 +3,11 @@ package com.devinotele.servletbridge;
 import jakarta.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
-public class JavaxToJakartaResponseWrapperAdapter extends HttpServletResponseWrapper {
+public class HttpServletResponseWrapperAdapter extends HttpServletResponseWrapper {
 
 	private final javax.servlet.http.HttpServletResponse javaxResponse;
 
-	public JavaxToJakartaResponseWrapperAdapter(javax.servlet.http.HttpServletResponse response) {
+	public HttpServletResponseWrapperAdapter(javax.servlet.http.HttpServletResponse response) {
 		super(null); // HttpServletResponseWrapper требует передачи jakarta.servlet.http.HttpServletResponse
 		this.javaxResponse = response;
 	}
