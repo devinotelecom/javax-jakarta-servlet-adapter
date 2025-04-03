@@ -26,10 +26,11 @@ public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet {
 
 	@Override
 	public void init (jakarta.servlet.ServletConfig config) throws ServletException {
-		super.init(config); // Вызов init у родительского класса (HttpServlet)
 		try {
 			var javaxConfig = ServletConfigAdapter.javax(config);
 			legacyServlet.init(javaxConfig);
+			//should be called after legacy servlet config initialized
+			super.init(config);
 		} catch (javax.servlet.ServletException e){
 			throw new jakarta.servlet.ServletException(e);
 		}
