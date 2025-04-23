@@ -1,5 +1,6 @@
 # JAVAX to JAKARTA servlet adapter
 [![](https://jitpack.io/v/devinotelecom/javax-jakarta-servlet-adapter.svg)](https://jitpack.io/#devinotelecom/javax-jakarta-servlet-adapter)
+
 Allows to run legacy spring boot 2.+ code on spring boot 3.+. As a result, makes migration process easier and softer.
 
 ## How to use
