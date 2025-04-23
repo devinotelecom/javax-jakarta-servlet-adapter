@@ -1,6 +1,5 @@
 package com.devinotele.servletbridge;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +17,8 @@ public class RequestDispatcherAdapter implements RequestDispatcher, jakarta.serv
 	public void forward (ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		try {
 			jakartaDispatcher.forward(
-				((HttpServletRequestAdapter) request).getJakartaRequest(),
-				((HttpServletResponseAdapter) response).getJakartaResponse()
+				IJakarta.unwrap(request),
+				IJakarta.unwrap(response)
 			);
 		} catch (jakarta.servlet.ServletException e){
 			throw new ServletException(e);
@@ -30,8 +29,8 @@ public class RequestDispatcherAdapter implements RequestDispatcher, jakarta.serv
 	public void include (ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		try {
 			jakartaDispatcher.include(
-				((HttpServletRequestAdapter) request).getJakartaRequest(),
-				((HttpServletResponseAdapter) response).getJakartaResponse()
+				IJakarta.unwrap(request),
+				IJakarta.unwrap(response)
 			);
 		} catch (jakarta.servlet.ServletException e){
 			throw new ServletException(e);

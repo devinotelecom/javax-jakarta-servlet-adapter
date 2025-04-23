@@ -1,14 +1,12 @@
 package com.devinotele.servletbridge;
 
+import lombok.RequiredArgsConstructor;
+
 import javax.servlet.ServletException;
 
+@RequiredArgsConstructor
 public class ServletExceptionAdapter extends ServletException {
-
 	private final jakarta.servlet.ServletException jakartaException;
-
-	public ServletExceptionAdapter(jakarta.servlet.ServletException jakartaException) {
-		this.jakartaException = jakartaException;
-	}
 
 	@Override
 	public String getMessage() {
@@ -60,7 +58,7 @@ public class ServletExceptionAdapter extends ServletException {
 		return jakartaException.toString();
 	}
 
-	private Throwable wrapThrowable(Throwable t) {
+	private Throwable wrapThrowable (Throwable t) {
 		if (t == null) {
 			return null;
 		}

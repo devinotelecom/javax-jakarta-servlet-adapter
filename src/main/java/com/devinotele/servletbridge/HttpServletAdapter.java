@@ -3,15 +3,21 @@ package com.devinotele.servletbridge;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+/**
+ Wrap legacy javax.servlet.http.HttpServlet as new jakarta.servlet.http.HttpServlet
+ We are inside boot3/jakarta environment and have to look outside like jakarta
+*/
 @RequiredArgsConstructor
-public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet {
-	@Getter private final javax.servlet.http.HttpServlet legacyServlet;
+public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet implements IJakarta<javax.servlet.http.HttpServlet> {
+	private final javax.servlet.http.HttpServlet legacyServlet;
+
+	@Override public HttpServlet unwrap () { return legacyServlet; }
 
 	@Override
 	protected void service (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

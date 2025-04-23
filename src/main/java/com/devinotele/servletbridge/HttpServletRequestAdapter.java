@@ -1,6 +1,5 @@
 package com.devinotele.servletbridge;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.AsyncContext;
@@ -19,14 +18,19 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ @see javax.servlet.http.HttpServletRequestWrapper
+ @see jakarta.servlet.http.HttpServletRequestWrapper
+ */
 @RequiredArgsConstructor
-public class HttpServletRequestAdapter implements HttpServletRequest {
-	@Getter private final jakarta.servlet.http.HttpServletRequest jakartaRequest;
+public class HttpServletRequestAdapter implements HttpServletRequest, IJakarta<jakarta.servlet.http.HttpServletRequest> {
+	private final jakarta.servlet.http.HttpServletRequest jakartaRequest;
 
 	@Override
-	public String getAuthType() {
-		return jakartaRequest.getAuthType();
-	}
+	public jakarta.servlet.http.HttpServletRequest unwrap () { return jakartaRequest; }
+
+	@Override
+	public String getAuthType() { return jakartaRequest.getAuthType(); }
 
 	@Override
 	public javax.servlet.http.Cookie[] getCookies() {
@@ -157,14 +161,14 @@ public class HttpServletRequestAdapter implements HttpServletRequest {
 		return jakartaRequest.isRequestedSessionIdFromURL();
 	}
 
-	@Override
+	@Override  @Deprecated
 	public boolean isRequestedSessionIdFromUrl() {
 		return jakartaRequest.isRequestedSessionIdFromURL();
 	}
 
 	@Override
-	public boolean authenticate(javax.servlet.http.HttpServletResponse response) throws IOException, javax.servlet.ServletException {
-		jakarta.servlet.http.HttpServletResponse jakartaResponse = new HttpServletResponseWrapperAdapter(response);
+	public boolean authenticate (javax.servlet.http.HttpServletResponse response) throws IOException, javax.servlet.ServletException {
+		jakarta.servlet.http.HttpServletResponse jakartaResponse = IJakarta.unwrap(response);
 		try {
 			return jakartaRequest.authenticate(jakartaResponse);
 		} catch (jakarta.servlet.ServletException e){

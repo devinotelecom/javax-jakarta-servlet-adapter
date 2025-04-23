@@ -1,6 +1,5 @@
 package com.devinotele.servletbridge;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.ServletConfig;
@@ -13,18 +12,20 @@ import java.util.Enumeration;
  @see jakarta.servlet.ServletConfig
  */
 @RequiredArgsConstructor
-public class ServletConfigAdapter implements ServletConfig {
-	@Getter private final jakarta.servlet.ServletConfig jakartaServletConfig;
+public class ServletConfigAdapter implements ServletConfig, IJakarta<jakarta.servlet.ServletConfig> {
+	private final jakarta.servlet.ServletConfig jakartaServletConfig;
 
 	public static javax.servlet.ServletConfig javax (jakarta.servlet.ServletConfig jakartaServletConfig) {
 		return jakartaServletConfig instanceof javax.servlet.ServletConfig javax ? javax
 				: new ServletConfigAdapter(jakartaServletConfig);
 	}
 
-	public jakarta.servlet.ServletConfig jakarta (javax.servlet.ServletConfig javaxServletConfig) {
+	public static jakarta.servlet.ServletConfig jakarta (javax.servlet.ServletConfig javaxServletConfig) {
 		return javaxServletConfig instanceof jakarta.servlet.ServletConfig jakarta ? jakarta
-				: ((ServletConfigAdapter) javaxServletConfig).getJakartaServletConfig();
+				: IJakarta.unwrap(javaxServletConfig);
 	}
+
+	@Override public jakarta.servlet.ServletConfig unwrap () { return jakartaServletConfig; }
 
 	@Override public String getServletName (){ return jakartaServletConfig.getServletName(); }
 

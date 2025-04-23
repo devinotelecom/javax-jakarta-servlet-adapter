@@ -1,6 +1,5 @@
 package com.devinotele.servletbridge;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.http.HttpServletResponse;
@@ -9,8 +8,10 @@ import java.util.Collection;
 import java.util.Locale;
 
 @RequiredArgsConstructor
-public class HttpServletResponseAdapter implements HttpServletResponse {
-	@Getter private final jakarta.servlet.http.HttpServletResponse jakartaResponse;
+public class HttpServletResponseAdapter implements HttpServletResponse, IJakarta<jakarta.servlet.http.HttpServletResponse> {
+	private final jakarta.servlet.http.HttpServletResponse jakartaResponse;
+
+	@Override public jakarta.servlet.http.HttpServletResponse unwrap () { return jakartaResponse; }
 
 	@Override
 	public void addCookie(javax.servlet.http.Cookie cookie) {

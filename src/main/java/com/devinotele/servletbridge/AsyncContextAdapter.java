@@ -1,13 +1,21 @@
 package com.devinotele.servletbridge;
 
-import javax.servlet.*;
+import lombok.RequiredArgsConstructor;
 
-public class AsyncContextAdapter implements AsyncContext {
+import javax.servlet.AsyncContext;
+import javax.servlet.AsyncListener;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
+@RequiredArgsConstructor
+public class AsyncContextAdapter implements AsyncContext, IJakarta<jakarta.servlet.AsyncContext> {
 	private final jakarta.servlet.AsyncContext jakartaAsyncContext;
 
-	public AsyncContextAdapter(jakarta.servlet.AsyncContext jakartaAsyncContext) {
-		this.jakartaAsyncContext = jakartaAsyncContext;
+	@Override
+	public jakarta.servlet.AsyncContext unwrap () {
+		return jakartaAsyncContext;
 	}
 
 	@Override
@@ -17,7 +25,7 @@ public class AsyncContextAdapter implements AsyncContext {
 
 	@Override
 	public void start(Runnable run) {
-
+		jakartaAsyncContext.start(run);
 	}
 
 	@Override

@@ -1,17 +1,18 @@
 package com.devinotele.servletbridge;
 
-import javax.servlet.FilterRegistration;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import lombok.RequiredArgsConstructor;
 
-import jakarta.servlet.*;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class FilterAdapter implements Filter {
+	private final jakarta.servlet.FilterRegistration filterRegistration;
 
-	private final javax.servlet.FilterRegistration filterRegistration;
-
-	public FilterAdapter(FilterRegistration filterRegistration) {
-		this.filterRegistration = filterRegistration;
-	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
