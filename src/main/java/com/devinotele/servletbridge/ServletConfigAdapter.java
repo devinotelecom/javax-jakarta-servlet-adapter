@@ -22,7 +22,7 @@ public class ServletConfigAdapter implements ServletConfig, IJakarta<jakarta.ser
 
 	public static jakarta.servlet.ServletConfig jakarta (javax.servlet.ServletConfig javaxServletConfig) {
 		return javaxServletConfig instanceof jakarta.servlet.ServletConfig jakarta ? jakarta
-				: IJakarta.unwrap(javaxServletConfig);
+				: IJakarta.unwrap(javaxServletConfig, jakarta.servlet.ServletConfig.class);
 	}
 
 	@Override public jakarta.servlet.ServletConfig unwrap () { return jakartaServletConfig; }

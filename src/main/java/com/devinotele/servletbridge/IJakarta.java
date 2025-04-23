@@ -8,8 +8,11 @@ public interface IJakarta<T> {
 	T unwrap ();
 
 	@SuppressWarnings("unchecked")
-	static <T> T unwrap (Object javax) {
-		return ( (IJakarta<T>) javax ).unwrap();
+	static <T> T unwrap (Object javax, Class<T> castTo) {
+		if (castTo.isInstance(javax)){
+			return castTo.cast(javax);// arg is T already
+		}
+		return ((IJakarta<T>) javax).unwrap();
 	}
 
 	static jakarta.servlet.http.HttpServletRequest unwrap (javax.servlet.http.HttpServletRequest javax) {
