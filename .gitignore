@@ -14,7 +14,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-# dist/
+dist/
+bin/
 
 ### Maven ###
 target/
@@ -114,7 +115,7 @@ generated_tests/
 ignite/
 !**/src/**/ignite/
 
-### в .env часто хранят пароли и токены = приватно
+### .env contains private info
 .env
 
 ### Your Application specifics
