@@ -25,7 +25,7 @@ package javax.servlet;
  *
  * @since Servlet 3.0
  */
-public interface SessionCookieConfig {
+public interface SessionCookieConfig extends jakarta.servlet.SessionCookieConfig {
 
     /**
      * Sets the name that will be assigned to any session tracking cookies created on behalf of the application
@@ -105,34 +105,6 @@ public interface SessionCookieConfig {
      * @see javax.servlet.http.Cookie#getPath()
      */
     public String getPath();
-
-    /**
-     * Sets the comment that will be assigned to any session tracking cookies created on behalf of the application
-     * represented by the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was acquired.
-     *
-     * <p>
-     * As a side effect of this call, the session tracking cookies will be marked with a <code>Version</code> attribute
-     * equal to <code>1</code>.
-     * 
-     * @param comment the cookie comment to use
-     *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
-     *                               acquired has already been initialized
-     *
-     * @see javax.servlet.http.Cookie#setComment(String)
-     * @see javax.servlet.http.Cookie#getVersion
-     */
-    public void setComment(String comment);
-
-    /**
-     * Gets the comment that will be assigned to any session tracking cookies created on behalf of the application
-     * represented by the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was acquired.
-     *
-     * @return the cookie comment set via {@link #setComment}, or <tt>null</tt> if {@link #setComment} was never called
-     *
-     * @see javax.servlet.http.Cookie#getComment()
-     */
-    public String getComment();
 
     /**
      * Marks or unmarks the session tracking cookies created on behalf of the application represented by the

@@ -18,11 +18,10 @@
 
 package javax.servlet;
 
-import java.io.CharConversionException;
+import com.devinotele.servletbridge.IJakarta;
+import lombok.RequiredArgsConstructor;
+
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 /**
  * Provides an output stream for sending binary data to the client. A <code>ServletOutputStream</code> object is
@@ -38,267 +37,56 @@ import java.util.ResourceBundle;
  * @see ServletResponse
  *
  */
-public abstract class ServletOutputStream extends OutputStream {
+@RequiredArgsConstructor
+public class ServletOutputStream extends jakarta.servlet.ServletOutputStream implements IJakarta<jakarta.servlet.ServletOutputStream> {
+	private final jakarta.servlet.ServletOutputStream jakartaOutputStream;
 
-    private static final String LSTRING_FILE = "javax.servlet.LocalStrings";
-    private static ResourceBundle lStrings = ResourceBundle.getBundle(LSTRING_FILE);
+	@Override public jakarta.servlet.ServletOutputStream unwrap () { return jakartaOutputStream; }
 
-    /**
-     *
-     * Does nothing, because this is an abstract class.
-     *
-     */
-    protected ServletOutputStream() {
-    }
+	@Override public void write (int b) throws IOException { jakartaOutputStream.write(b); }
 
-    /**
-     * Writes a <code>String</code> to the client, without a carriage return-line feed (CRLF) character at the end.
-     *
-     *
-     * @param s the <code>String</code> to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void print(String s) throws IOException {
-        if (s == null)
-            s = "null";
-        int len = s.length();
-        byte[] out = new byte[len];
-        for (int i = 0; i < len; i++) {
-            char c = s.charAt(i);
+	@Override public boolean isReady () { return jakartaOutputStream.isReady(); }
 
-            //
-            // XXX NOTE: This is clearly incorrect for many strings,
-            // but is the only consistent approach within the current
-            // servlet framework. It must suffice until servlet output
-            // streams properly encode their output.
-            //
-            if ((c & 0xff00) != 0) { // high order byte must be zero
-                String errMsg = lStrings.getString("err.not_iso8859_1");
-                Object[] errArgs = new Object[1];
-                errArgs[0] = Character.valueOf(c);
-                errMsg = MessageFormat.format(errMsg, errArgs);
-                throw new CharConversionException(errMsg);
-            }
-            out[i] = (byte) (0xff & c);
-        }
-        write(out,0,len);
-    }
+	@Override public void close () throws IOException { jakartaOutputStream.close(); }
 
-    /**
-     * Writes a <code>boolean</code> value to the client, with no carriage return-line feed (CRLF) character at the end.
-     *
-     * @param b the <code>boolean</code> value to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void print(boolean b) throws IOException {
-        print(lStrings.getString(b ? "value.true" : "value.false"));
-    }
+	@Override public void write (byte[] b) throws IOException { jakartaOutputStream.write(b); }
 
-    /**
-     * Writes a character to the client, with no carriage return-line feed (CRLF) at the end.
-     *
-     * @param c the character to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void print(char c) throws IOException {
-        print(String.valueOf(c));
-    }
+	@Override public void write (byte[] b, int off, int len) throws IOException { jakartaOutputStream.write(b, off, len); }
 
-    /**
-     *
-     * Writes an int to the client, with no carriage return-line feed (CRLF) at the end.
-     *
-     * @param i the int to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void print(int i) throws IOException {
-        print(String.valueOf(i));
-    }
+	@Override public void flush () throws IOException { jakartaOutputStream.flush(); }
 
-    /**
-     *
-     * Writes a <code>long</code> value to the client, with no carriage return-line feed (CRLF) at the end.
-     *
-     * @param l the <code>long</code> value to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void print(long l) throws IOException {
-        print(String.valueOf(l));
-    }
+	@Override
+	public void setWriteListener (jakarta.servlet.WriteListener writeListener) {
+		jakartaOutputStream.setWriteListener(writeListener);
+	}
 
-    /**
-     *
-     * Writes a <code>float</code> value to the client, with no carriage return-line feed (CRLF) at the end.
-     *
-     * @param f the <code>float</code> value to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     *
-     */
-    public void print(float f) throws IOException {
-        print(String.valueOf(f));
-    }
+	@Override public void print (String s) throws IOException { jakartaOutputStream.print(s); }
 
-    /**
-     *
-     * Writes a <code>double</code> value to the client, with no carriage return-line feed (CRLF) at the end.
-     *
-     * @param d the <code>double</code> value to send to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void print(double d) throws IOException {
-        print(String.valueOf(d));
-    }
+	@Override public void print (boolean b) throws IOException { jakartaOutputStream.print(b); }
 
-    /**
-     * Writes a carriage return-line feed (CRLF) to the client.
-     *
-     *
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println() throws IOException {
-        print("\r\n");
-    }
+	@Override public void print (char c) throws IOException { jakartaOutputStream.print(c); }
 
-    /**
-     * Writes a <code>String</code> to the client, followed by a carriage return-line feed (CRLF).
-     *
-     *
-     * @param s the <code>String</code> to write to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(String s) throws IOException {
-        print(s == null ? "null\r\n" : (s + "\r\n"));
-    }
+	@Override public void print (int i) throws IOException { jakartaOutputStream.print(i); }
 
-    /**
-     *
-     * Writes a <code>boolean</code> value to the client, followed by a carriage return-line feed (CRLF).
-     *
-     *
-     * @param b the <code>boolean</code> value to write to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(boolean b) throws IOException {
-        println(lStrings.getString(b ? "value.true" : "value.false"));
-    }
+	@Override public void print (long l) throws IOException { jakartaOutputStream.print(l); }
 
-    /**
-     *
-     * Writes a character to the client, followed by a carriage return-line feed (CRLF).
-     *
-     * @param c the character to write to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(char c) throws IOException {
-        println(String.valueOf(c));
-    }
+	@Override public void print (float f) throws IOException { jakartaOutputStream.print(f); }
 
-    /**
-     *
-     * Writes an int to the client, followed by a carriage return-line feed (CRLF) character.
-     *
-     *
-     * @param i the int to write to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(int i) throws IOException {
-        println(String.valueOf(i));
-    }
+	@Override public void println () throws IOException { jakartaOutputStream.println(); }
 
-    /**
-     *
-     * Writes a <code>long</code> value to the client, followed by a carriage return-line feed (CRLF).
-     *
-     *
-     * @param l the <code>long</code> value to write to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(long l) throws IOException {
-        println(String.valueOf(l));
-    }
+	@Override public void print (double d) throws IOException { jakartaOutputStream.print(d); }
 
-    /**
-     *
-     * Writes a <code>float</code> value to the client, followed by a carriage return-line feed (CRLF).
-     *
-     * @param f the <code>float</code> value to write to the client
-     *
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(float f) throws IOException {
-        println(String.valueOf(f));
-    }
+	@Override public void println (String s) throws IOException { jakartaOutputStream.println(s); }
 
-    /**
-     *
-     * Writes a <code>double</code> value to the client, followed by a carriage return-line feed (CRLF).
-     *
-     *
-     * @param d the <code>double</code> value to write to the client
-     *
-     * @exception IOException if an input or output exception occurred
-     *
-     */
-    public void println(double d) throws IOException {
-        println(String.valueOf(d));
-    }
+	@Override public void println (boolean b) throws IOException { jakartaOutputStream.println(b); }
 
-    /**
-     * This method can be used to determine if data can be written without blocking.
-     *
-     * @return <code>true</code> if a write to this <code>ServletOutputStream</code> will succeed, otherwise returns
-     *         <code>false</code>.
-     *
-     * @since Servlet 3.1
-     */
-    public abstract boolean isReady();
+	@Override public void println (char c) throws IOException { jakartaOutputStream.println(c); }
 
-    /**
-     * Instructs the <code>ServletOutputStream</code> to invoke the provided {@link WriteListener} when it is possible
-     * to write
-     *
-     *
-     * @param writeListener the {@link WriteListener} that should be notified when it's possible to write
-     *
-     * @exception IllegalStateException if one of the following conditions is true
-     *                                  <ul>
-     *                                  <li>the associated request is neither upgraded nor the async started
-     *                                  <li>setWriteListener is called more than once within the scope of the same
-     *                                  request.
-     *                                  </ul>
-     *
-     * @throws NullPointerException if writeListener is null
-     *
-     * @since Servlet 3.1
-     */
-    public abstract void setWriteListener(WriteListener writeListener);
+	@Override public void println (int i) throws IOException { jakartaOutputStream.println(i); }
 
+	@Override public void println (long l) throws IOException { jakartaOutputStream.println(l); }
+
+	@Override public void println (float f) throws IOException { jakartaOutputStream.println(f); }
+
+	@Override public void println (double d) throws IOException { jakartaOutputStream.println(d); }
 }

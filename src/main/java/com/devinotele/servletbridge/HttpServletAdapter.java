@@ -53,11 +53,7 @@ public class HttpServletAdapter extends jakarta.servlet.http.HttpServlet impleme
 	@Override
 	public void init () throws ServletException {
 		super.init();
-		try {
-			legacyServlet.init();
-		} catch (javax.servlet.ServletException e){
-			throw new ServletException(e);
-		}
+		// legacyServlet.init() must be called by its init(ServletConfig)
 	}
 
 	@Override

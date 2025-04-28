@@ -27,7 +27,7 @@ import java.io.IOException;
  *
  * @since Servlet 3.1
  */
-public interface WebConnection extends AutoCloseable {
+public interface WebConnection extends jakarta.servlet.http.WebConnection {
     /**
      * Returns an input stream for this web connection.
      *
@@ -35,7 +35,8 @@ public interface WebConnection extends AutoCloseable {
      *
      * @exception IOException if an I/O error occurs
      */
-    public ServletInputStream getInputStream() throws IOException;
+    @Override
+		ServletInputStream getInputStream () throws IOException;
 
     /**
      * Returns an output stream for this web connection.
@@ -44,5 +45,6 @@ public interface WebConnection extends AutoCloseable {
      *
      * @exception IOException if an I/O error occurs
      */
-    public ServletOutputStream getOutputStream() throws IOException;
+		@Override
+		ServletOutputStream getOutputStream () throws IOException;
 }

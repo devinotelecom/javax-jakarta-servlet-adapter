@@ -1,25 +1,10 @@
-/*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates and others.
- * All rights reserved.
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package javax.servlet;
 
+import com.devinotele.servletbridge.IJakarta;
+import lombok.RequiredArgsConstructor;
+
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
@@ -41,89 +26,57 @@ import java.io.InputStream;
  * @see ServletRequest
  *
  */
-public abstract class ServletInputStream extends InputStream {
+@RequiredArgsConstructor
+public class ServletInputStream extends jakarta.servlet.ServletInputStream implements IJakarta<jakarta.servlet.ServletInputStream> {
+	private final jakarta.servlet.ServletInputStream jakartaInputStream;
 
-    /**
-     * Does nothing, because this is an abstract class.
-     *
-     */
-    protected ServletInputStream() {
-    }
+	@Override public jakarta.servlet.ServletInputStream unwrap (){ return jakartaInputStream; }
 
-    /**
-     *
-     * Reads the input stream, one line at a time. Starting at an offset, reads bytes into an array, until it reads a
-     * certain number of bytes or reaches a newline character, which it reads into the array as well.
-     *
-     * <p>
-     * This method returns -1 if it reaches the end of the input stream before reading the maximum number of bytes.
-     *
-     *
-     *
-     * @param b   an array of bytes into which data is read
-     *
-     * @param off an integer specifying the character at which this method begins reading
-     *
-     * @param len an integer specifying the maximum number of bytes to read
-     *
-     * @return an integer specifying the actual number of bytes read, or -1 if the end of the stream is reached
-     *
-     * @exception IOException if an input or output exception has occurred
-     *
-     */
-    public int readLine(byte[] b, int off, int len) throws IOException {
+	@Override
+	public int readLine (byte[] b, int off, int len) throws IOException {
+		return jakartaInputStream.readLine(b, off, len);
+	}
 
-        if (len <= 0) {
-            return 0;
-        }
-        int count = 0, c;
+	@Override public int read () throws IOException { return jakartaInputStream.read(); }
 
-        while ((c = read()) != -1) {
-            b[off++] = (byte) c;
-            count++;
-            if (c == '\n' || count == len) {
-                break;
-            }
-        }
-        return count > 0 ? count : -1;
-    }
+	@Override public boolean isFinished () { return jakartaInputStream.isFinished(); }
 
-    /**
-     * Returns true when all the data from the stream has been read else it returns false.
-     *
-     * @return <code>true</code> when all data for this particular request has been read, otherwise returns
-     *         <code>false</code>.
-     *
-     * @since Servlet 3.1
-     */
-    public abstract boolean isFinished();
+	@Override public boolean isReady () { return jakartaInputStream.isReady(); }
 
-    /**
-     * Returns true if data can be read without blocking else returns false.
-     *
-     * @return <code>true</code> if data can be obtained without blocking, otherwise returns <code>false</code>.
-     *
-     * @since Servlet 3.1
-     */
-    public abstract boolean isReady();
+	@Override public byte[] readAllBytes () throws IOException { return jakartaInputStream.readAllBytes(); }
 
-    /**
-     * Instructs the <code>ServletInputStream</code> to invoke the provided {@link ReadListener} when it is possible to
-     * read
-     *
-     * @param readListener the {@link ReadListener} that should be notified when it's possible to read.
-     *
-     * @exception IllegalStateException if one of the following conditions is true
-     *                                  <ul>
-     *                                  <li>the associated request is neither upgraded nor the async started
-     *                                  <li>setReadListener is called more than once within the scope of the same
-     *                                  request.
-     *                                  </ul>
-     *
-     * @throws NullPointerException if readListener is null
-     *
-     * @since Servlet 3.1
-     *
-     */
-    public abstract void setReadListener(ReadListener readListener);
+	@Override public byte[] readNBytes (int len) throws IOException { return jakartaInputStream.readNBytes(len); }
+
+	@Override
+	public int readNBytes (byte[] b, int off, int len) throws IOException {
+		return jakartaInputStream.readNBytes(b, off, len);
+	}
+
+	@Override public int read (byte[] b) throws IOException { return jakartaInputStream.read(b); }
+
+	@Override
+	public int read (byte[] b, int off, int len) throws IOException {
+		return jakartaInputStream.read(b, off, len);
+	}
+
+	@Override public long skip (long n) throws IOException { return jakartaInputStream.skip(n); }
+
+	@Override public void skipNBytes (long n) throws IOException { jakartaInputStream.skipNBytes(n); }
+
+	@Override public int available () throws IOException { return jakartaInputStream.available(); }
+
+	@Override public void close () throws IOException { jakartaInputStream.close(); }
+
+	@Override public void mark (int readlimit) { jakartaInputStream.mark(readlimit); }
+
+	@Override public void reset () throws IOException { jakartaInputStream.reset(); }
+
+	@Override public boolean markSupported () { return jakartaInputStream.markSupported(); }
+
+	@Override public long transferTo (OutputStream out) throws IOException { return jakartaInputStream.transferTo(out); }
+
+	@Override
+	public void setReadListener (jakarta.servlet.ReadListener readListener) {
+		jakartaInputStream.setReadListener(readListener);
+	}
 }

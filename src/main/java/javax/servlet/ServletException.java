@@ -18,14 +18,16 @@
 
 package javax.servlet;
 
+import java.io.Serial;
+
 /**
  * Defines a general exception a servlet can throw when it encounters difficulty.
  *
  * @author Various
  */
-public class ServletException extends Exception {
+public class ServletException extends jakarta.servlet.ServletException {
 
-    private static final long serialVersionUID = 4221302886851315160L;
+    @Serial private static final long serialVersionUID = 4221302886851315160L;
 
     private Throwable rootCause;
 
@@ -90,7 +92,8 @@ public class ServletException extends Exception {
      * @return the <code>Throwable</code> that caused this servlet exception
      *
      */
-    public Throwable getRootCause() {
+    @Override
+		public Throwable getRootCause() {
         return rootCause;
     }
 }

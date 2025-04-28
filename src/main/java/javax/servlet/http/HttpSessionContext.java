@@ -32,7 +32,7 @@ import java.util.Enumeration;
  * @see HttpSessionBindingListener
  *
  */
-@Deprecated
+@Deprecated(forRemoval = true)
 public interface HttpSessionContext {
 
     /**

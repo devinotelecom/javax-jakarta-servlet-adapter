@@ -18,7 +18,6 @@
 package javax.servlet;
 
 import java.io.IOException;
-import java.util.EventListener;
 
 /**
  * <p>
@@ -28,8 +27,7 @@ import java.util.EventListener;
  *
  * @since Servlet 3.1
  */
-public interface ReadListener extends EventListener {
-
+public interface ReadListener extends jakarta.servlet.ReadListener {
     /**
      * When an instance of the <code>ReadListener</code> is registered with a {@link ServletInputStream}, this method
      * will be invoked by the container the first time when it is possible to read data. Subsequently the container will
@@ -38,20 +36,22 @@ public interface ReadListener extends EventListener {
      *
      * @throws IOException if an I/O related error has occurred during processing
      */
-    public void onDataAvailable() throws IOException;
+		@Override
+		void onDataAvailable () throws IOException;
 
     /**
      * Invoked when all data for the current request has been read.
      *
      * @throws IOException if an I/O related error has occurred during processing
      */
-    public void onAllDataRead() throws IOException;
+		@Override
+		void onAllDataRead () throws IOException;
 
     /**
      * Invoked when an error occurs processing the request.
      *
      * @param t the throwable to indicate why the read operation failed
      */
-    public void onError(Throwable t);
-
+		@Override
+		void onError (Throwable t);
 }
