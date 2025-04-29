@@ -62,8 +62,8 @@ public class ServletExceptionAdapter extends ServletException {
 		if (t == null) {
 			return null;
 		}
-		if (t instanceof jakarta.servlet.ServletException) {
-			return new ServletExceptionAdapter((jakarta.servlet.ServletException) t);
+		if (t instanceof jakarta.servlet.ServletException e){
+			return new ServletExceptionAdapter(e);
 		}
 		return t;
 	}

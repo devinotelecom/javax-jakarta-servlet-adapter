@@ -133,12 +133,12 @@ public class HttpServletRequestAdapter implements HttpServletRequest, IJakarta<j
 
 	@Override
 	public javax.servlet.http.HttpSession getSession(boolean create) {
-		return new HttpSessionAdapter(jakartaRequest.getSession(create));
+		return HttpSessionAdapter.of(jakartaRequest.getSession(create));
 	}
 
 	@Override
 	public javax.servlet.http.HttpSession getSession() {
-		return new HttpSessionAdapter(jakartaRequest.getSession());
+		return HttpSessionAdapter.of(jakartaRequest.getSession());
 	}
 
 	@Override

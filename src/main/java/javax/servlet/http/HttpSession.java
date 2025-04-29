@@ -143,7 +143,9 @@ public interface HttpSession {
      * @return the {@link HttpSessionContext} for this session.
      */
     @Deprecated
-    public HttpSessionContext getSessionContext();
+    default HttpSessionContext getSessionContext () {
+			return null;
+		}
 
     /**
      * Returns the object bound with the specified name in this session, or <code>null</code> if no object is bound

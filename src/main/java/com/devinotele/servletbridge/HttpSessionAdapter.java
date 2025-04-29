@@ -1,27 +1,30 @@
 package com.devinotele.servletbridge;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 
-public class HttpSessionAdapter implements HttpSession {
-
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class HttpSessionAdapter implements HttpSession, IJakarta<jakarta.servlet.http.HttpSession> {
 	private final jakarta.servlet.http.HttpSession jakartaSession;
 
-	public HttpSessionAdapter(jakarta.servlet.http.HttpSession jakartaSession) {
-		this.jakartaSession = jakartaSession;
+	public static @Nullable HttpSessionAdapter of (jakarta.servlet.http.@Nullable HttpSession jakartaSession) {
+		return jakartaSession == null ? null
+				: new HttpSessionAdapter(jakartaSession);
 	}
+
+	@Override public jakarta.servlet.http.HttpSession unwrap (){ return jakartaSession; }
 
 	@Override
 	public long getCreationTime() {
 		return jakartaSession.getCreationTime();
 	}
 
-	@Override
-	public String getId() {
-		return jakartaSession.getId();
-	}
+	@Override public String getId (){ return jakartaSession.getId(); }
 
 	@Override
 	public long getLastAccessedTime() {
@@ -30,17 +33,12 @@ public class HttpSessionAdapter implements HttpSession {
 
 	@Override
 	public ServletContext getServletContext() {
-		return null;
+		return new ServletContextAdapter(jakartaSession.getServletContext());
 	}
 
 	@Override
 	public int getMaxInactiveInterval() {
 		return jakartaSession.getMaxInactiveInterval();
-	}
-
-	@Override
-	public HttpSessionContext getSessionContext() {
-		return null;
 	}
 
 	@Override
@@ -54,8 +52,8 @@ public class HttpSessionAdapter implements HttpSession {
 	}
 
 	@Override
-	public Object getValue(String name) {
-		return null;
+	public Object getValue (String name) {
+		return jakartaSession.getAttribute(name);
 	}
 
 	@Override
@@ -75,7 +73,7 @@ public class HttpSessionAdapter implements HttpSession {
 
 	@Override
 	public void putValue(String name, Object value) {
-
+		setAttribute(name, value);
 	}
 
 	@Override
@@ -85,7 +83,7 @@ public class HttpSessionAdapter implements HttpSession {
 
 	@Override
 	public void removeValue(String name) {
-
+		removeAttribute(name);
 	}
 
 	@Override
@@ -93,8 +91,5 @@ public class HttpSessionAdapter implements HttpSession {
 		jakartaSession.invalidate();
 	}
 
-	@Override
-	public boolean isNew() {
-		return jakartaSession.isNew();
-	}
+	@Override public boolean isNew (){ return jakartaSession.isNew(); }
 }
