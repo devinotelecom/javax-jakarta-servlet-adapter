@@ -10,7 +10,7 @@ public ServletRegistrationBean<HttpServletAdapter> wrappedLegacyServlet() {
 	//Any legacy javax servlet which extends javax.servlet.http.HttpServlet
 	val legacyServlet = new LegacyServlet();
 	// wrapping legacy servlet into adapter
-	HttpServletAdapter adapter = new HttpServletAdapter(applicationServlet);
+	HttpServletAdapter adapter = new HttpServletAdapter(legacyServlet);
 	val registrationBean = new ServletRegistrationBean<>(adapter,	"servlet_path");
 	registrationBean.setName("beanName");
 	return registrationBean;
